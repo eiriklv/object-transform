@@ -6,6 +6,8 @@ A small library to do object transforms.
 Mostly for use with functional programming pipelines and streams.
 The arguments are 'reversed' to be able to do meaningful partial application / currying.
 
+---------------------------------------
+
 ### .transformSync(fn, object)
 
 Transform the properties of an object based on a transform function `fn`
@@ -32,6 +34,8 @@ var transformed = obtr.transformSync(function(result, value, key) {
 //   b: 'dlrow'
 // }
 ```
+
+---------------------------------------
 
 ### .transformToSync(transforms, object)
 
@@ -70,6 +74,8 @@ var transformed = obtr.transformToSync(transforms, words);
 // }
 ```
 
+---------------------------------------
+
 ### .copy(entries, object)
 
 Copy object properties to new properties on the same object.
@@ -102,6 +108,8 @@ var copied = obtr.copy(entries, words);
 //   crap: 'world'
 // }
 ```
+
+---------------------------------------
 
 ### .transform(fn, object, callback)
 
@@ -136,6 +144,8 @@ obtr.transform(function(result, value, key, callback) {
   // }
 });
 ```
+
+---------------------------------------
 
 ### .transformTo(transforms, object)
 
@@ -177,3 +187,5 @@ obtr.transformTo(transforms, words, function(err, transformed) {
   // }
 });
 ```
+
+---------------------------------------
