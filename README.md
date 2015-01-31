@@ -23,11 +23,9 @@ var words = {
   b: 'world'
 };
 
-var reverse = function(str) {
-  return str.split('').reverse().join('');
-};
-
-var transformed = obtr.transformSync(words, reverse);
+var transformed = obtr.transformSync(words, function(result, value, key) {
+  result[key] = value.split('').reverse().join('');
+});
 // {
 //   a: 'olleh',
 //   b: 'dlrow'
