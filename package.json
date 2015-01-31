@@ -1,0 +1,27 @@
+{
+  "name": "object-transform",
+  "version": "1.0.0",
+  "main": "./lib.js",
+  "description": "A small lib to transform object properties using sync or async functions",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/eiriklv/object-transform.git"
+  },
+  "keywords": [
+    "functional",
+    "pipeline",
+    "transform",
+    "copy"
+  ],
+  "author": "Eirik Vullum <evullum@gmail.com> (http://www.evconsult.no/)",
+  "bugs": {
+    "url": "https://github.com/eiriklv/object-transform/issues"
+  },
+  "homepage": "https://github.com/eiriklv/object-transform",
+  "license": "MIT"
+}
