@@ -4,16 +4,17 @@ Object Transform
 #### Introduction:
 A small library to do object transforms.
 Mostly for use with functional programming pipelines and streams.
+The arguments are 'reversed' to be able to do meaningful partial application / currying.
 
-### .transformSync(object, fn)
+### .transformSync(fn, object)
 
 Transform the properties of an object based on a transform function `fn`
 
 __Arguments__
 
-* `object` - The original object that is to be transformed.
 * `fn(result, value, key)` - This gets called for all properties of the object,
   and the `result` should be mutated to the desired result. No explicit return necessary.
+* `object` - The original object that is to be transformed.
 
 __Example__
 
@@ -23,16 +24,16 @@ var words = {
   b: 'world'
 };
 
-var transformed = obtr.transformSync(words, function(result, value, key) {
+var transformed = obtr.transformSync(function(result, value, key) {
   result[key] = value.split('').reverse().join('');
-});
+}, words);
 // {
 //   a: 'olleh',
 //   b: 'dlrow'
 // }
 ```
 
-### .transformToSync(object, transforms)
+### .transformToSync(transforms, object)
 
 Transform the properties of an object based on an object
 describing transforms on specific properties. The value
@@ -40,8 +41,8 @@ of the property is used as input for the transform
 
 __Arguments__
 
-* `object` - The original object that is to be transformed.
 * `transforms` - An object specifying the transforms to be applied.
+* `object` - The original object that is to be transformed.
 
 __Example__
 
@@ -61,7 +62,7 @@ var transforms = {
   b: reverse
 };
 
-var transformed = obtr.transformToSync(words, transforms);
+var transformed = obtr.transformToSync(transforms, words);
 // {
 //   a: 'olleh',
 //   b: 'dlrow',
@@ -69,15 +70,15 @@ var transformed = obtr.transformToSync(words, transforms);
 // }
 ```
 
-### .copy(object, entries)
+### .copy(entries, object)
 
 Copy object properties to new properties on the same object.
 
 __Arguments__
 
-* `object` - The original object that is to be transformed.
-* `entires` - A string or an array of strings describing
+* `entries` - A string or an array of strings describing
   what to copy and where to put it.
+* `object` - The original object that is to be transformed.
 
 __Example__
 
@@ -92,7 +93,7 @@ var entries = {
   b: 'crap'
 };
 
-var copied = obtr.copy(words, entries);
+var copied = obtr.copy(entries, words);
 // {
 //   a: 'hello',
 //   b: 'world',
@@ -102,17 +103,18 @@ var copied = obtr.copy(words, entries);
 // }
 ```
 
-### .transform(object, fn, callback)
+### .transform(fn, object, callback)
 
 (Asyncronous version)
 Transform the properties of an object based on a transform function `fn`.
 
 __Arguments__
 
-* `object` - The original object that is to be transformed.
+
 * `fn(result, value, key, callback)` - This gets called for all properties of the object,
   and the `result` should be mutated to the desired result.
   Invoke `callback` with an error or `null` when done.
+* `object` - The original object that is to be transformed.
 * `callback(err, result)` - a final callback to be called with the result or an error.
 
 __Example__
@@ -123,10 +125,10 @@ var words = {
   b: 'world'
 };
 
-obtr.transform(words, function(result, value, key, callback) {
+obtr.transform(function(result, value, key, callback) {
   result[key] = value.split('').reverse().join('');
   callback();
-}, function(err, transformed) {
+}, words, function(err, transformed) {
   console.log(transformed);
   // {
   //   a: 'olleh',
@@ -135,7 +137,7 @@ obtr.transform(words, function(result, value, key, callback) {
 });
 ```
 
-### .transformTo(object, transforms)
+### .transformTo(transforms, object)
 
 (Asyncronous version)
 Transform the properties of an object based on an object
@@ -144,8 +146,8 @@ of the property is used as input for the transform.
 
 __Arguments__
 
-* `object` - The original object that is to be transformed.
 * `transforms` - An object specifying the transforms to be applied.
+* `object` - The original object that is to be transformed.
 * `callback(err, result)` - a final callback to be called with the result or an error.
 
 __Example__
@@ -166,7 +168,7 @@ var transforms = {
   b: reverse
 };
 
-obtr.transformTo(words, transforms, function(err, transformed) {
+obtr.transformTo(transforms, words, function(err, transformed) {
   console.log(transformed);
   // {
   //   a: 'olleh',

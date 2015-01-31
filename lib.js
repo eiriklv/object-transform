@@ -48,7 +48,7 @@
     }
   };
 
-  objectTransform.transformSync = function(object, fn) {
+  objectTransform.transformSync = function(fn, object) {
     var keys = Object.keys(object);
     var result = {};
 
@@ -59,8 +59,8 @@
     return result;
   }
 
-  objectTransform.copy = function(object, copies) {
-    return objectTransform.transformSync(object, function(result, n, key) {
+  objectTransform.copy = function(copies, object) {
+    return objectTransform.transformSync(function(result, n, key) {
       if (copies.hasOwnProperty(key)) {
         if (Array.isArray(copies[key])) {
           copies[key].forEach(function(newKey) {
@@ -71,20 +71,20 @@
         }
       }
       result[key] = n;
-    });
+    }, object);
   }
 
-  objectTransform.transformToSync = function(object, transforms) {
-    return objectTransform.transformSync(object, function(result, value, key) {
+  objectTransform.transformToSync = function(transforms, object) {
+    return objectTransform.transformSync(function(result, value, key) {
       if (transforms.hasOwnProperty(key)) {
         result[key] = transforms[key](value);
       } else {
         result[key] = value;
       }
-    });
+    }, object);
   }
 
-  objectTransform.transform = function(object, fn, callback) {
+  objectTransform.transform = function(fn, object, callback) {
     var keys = Object.keys(object);
     var result = {};
 
@@ -95,8 +95,8 @@
     });
   }
 
-  objectTransform.transformTo = function(object, transforms, callback) {
-    objectTransform.transform(object, function(result, value, key, callback) {
+  objectTransform.transformTo = function(transforms, object, callback) {
+    objectTransform.transform(function(result, value, key, callback) {
       if (transforms.hasOwnProperty(key)) {
         transforms[key](value, function(err, transformed) {
           if (!err) result[key] = transformed;
@@ -106,7 +106,7 @@
         result[key] = value;
         callback();
       }
-    }, callback);
+    }, object, callback);
   }
 
   return objectTransform;
