@@ -105,7 +105,7 @@ var copied = obtr.copy(words, entries);
 ### .transform(object, fn, callback)
 
 (Asyncronous version)
-Transform the properties of an object based on a transform function `fn`
+Transform the properties of an object based on a transform function `fn`.
 
 __Arguments__
 
@@ -140,7 +140,7 @@ obtr.transform(words, function(result, value, key, callback) {
 (Asyncronous version)
 Transform the properties of an object based on an object
 describing transforms on specific properties. The value
-of the property is used as input for the transform
+of the property is used as input for the transform.
 
 __Arguments__
 
