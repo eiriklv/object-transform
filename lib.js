@@ -60,7 +60,7 @@
   }
 
   objectTransform.copy = function(object, copies) {
-    return transformSync(object, function(result, n, key) {
+    return objectTransform.transformSync(object, function(result, n, key) {
       if (copies.hasOwnProperty(key)) {
         if (Array.isArray(copies[key])) {
           copies[key].forEach(function(newKey) {
@@ -75,7 +75,7 @@
   }
 
   objectTransform.transformToSync = function(object, transforms) {
-    return transformSync(object, function(result, value, key) {
+    return objectTransform.transformSync(object, function(result, value, key) {
       if (transforms.hasOwnProperty(key)) {
         result[key] = transforms[key](value);
       } else {
@@ -96,7 +96,7 @@
   }
 
   objectTransform.transformTo = function(object, transforms, callback) {
-    transform(object, function(result, value, key, callback) {
+    objectTransform.transform(object, function(result, value, key, callback) {
       if (transforms.hasOwnProperty(key)) {
         transforms[key](value, function(err, transformed) {
           if (!err) result[key] = transformed;
