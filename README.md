@@ -123,11 +123,10 @@ var words = {
   b: 'world'
 };
 
-var reverse = function(input, callback) {
-  callback(null, input.split('').reverse().join(''));
-}
-
-obtr.transform(words, reverse, function(err, transformed) {
+obtr.transform(words, function(result, value, key, callback) {
+  result[key] = value.split('').reverse().join('');
+  callback();
+}, function(err, transformed) {
   console.log(transformed);
   // {
   //   a: 'olleh',
