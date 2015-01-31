@@ -1,6 +1,6 @@
 {
   "name": "object-transform",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "main": "./lib.js",
   "description": "A small lib to transform object properties using sync or async functions",
   "dependencies": {},
