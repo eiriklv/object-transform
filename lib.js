@@ -8,7 +8,7 @@
   }
 }(this, function() {
 
-  var objectTransform = {}
+  var objectTransform = {};
 
   function _only_once(fn) {
     var called = false;
@@ -23,7 +23,7 @@
     for (var i = 0; i < arr.length; i += 1) {
       iterator(arr[i], i, arr);
     }
-  };
+  }
 
   function _asyncEach(arr, iterator, callback) {
     callback = callback || function() {};
@@ -46,7 +46,7 @@
         }
       }
     }
-  };
+  }
 
   objectTransform.transformSync = function(fn, object) {
     var keys = Object.keys(object);
@@ -57,22 +57,22 @@
     });
 
     return result;
-  }
+  };
 
   objectTransform.copy = function(copies, object) {
-    return objectTransform.transformSync(function(result, n, key) {
+    return objectTransform.transformSync(function(result, value, key) {
       if (copies.hasOwnProperty(key)) {
         if (Array.isArray(copies[key])) {
           copies[key].forEach(function(newKey) {
-            result[newKey] = n;
+            result[newKey] = value;
           });
         } else {
-          result[copies[key]] = n;
+          result[copies[key]] = value;
         }
       }
-      result[key] = n;
+      result[key] = value;
     }, object);
-  }
+  };
 
   objectTransform.transformToSync = function(transforms, object) {
     return objectTransform.transformSync(function(result, value, key) {
@@ -82,7 +82,7 @@
         result[key] = value;
       }
     }, object);
-  }
+  };
 
   objectTransform.transform = function(fn, object, callback) {
     var keys = Object.keys(object);
@@ -93,7 +93,7 @@
     }, function(err) {
       callback(err, result);
     });
-  }
+  };
 
   objectTransform.transformTo = function(transforms, object, callback) {
     objectTransform.transform(function(result, value, key, callback) {
@@ -107,7 +107,7 @@
         callback();
       }
     }, object, callback);
-  }
+  };
 
   return objectTransform;
 
