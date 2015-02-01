@@ -76,13 +76,14 @@ var transformed = obtr.transformToSync(transforms, words);
 
 ---------------------------------------
 
-### .copy(entries, object)
+### .copy(specs, object)
 
+(Deprecated in favor of `.copyToFrom`)
 Copy object properties to new properties on the same object.
 
 __Arguments__
 
-* `entries` - A string or an array of strings describing
+* `specs` - A string or an array of strings describing
   what to copy and where to put it.
 * `object` - The original object that is to be transformed.
 
@@ -94,18 +95,68 @@ var words = {
   b: 'world'
 };
 
-var entries = {
+var specs = {
   a: ['c', 'd'],
   b: 'crap'
 };
 
-var copied = obtr.copy(entries, words);
+var copied = obtr.copy(specs, words);
 // {
 //   a: 'hello',
 //   b: 'world',
 //   c: 'hello',
 //   d: 'hello',
 //   crap: 'world'
+// }
+```
+
+---------------------------------------
+
+### .copyToFrom(specs, object)
+
+Copy object properties to new properties on the same object,
+with support for string literals
+
+__Arguments__
+
+* `specs` - A string or an array of strings describing
+  what to copy and where to put it.
+* `object` - The original object that is to be transformed.
+
+__Example__
+
+```js
+var original = {
+  name: 'Eirik',
+  birth: {
+    year: 1986
+  },
+  list: [{
+    count: 1
+  }]
+};
+
+var specs = {
+  newField: 'name',
+  newField2: {
+    nestedField: 'name',
+    nestedField2: {
+      birthYear: 'birth.year'
+    }
+  },
+  birthYear: 'birth.year',
+  firstListElement: 'list[0].count'
+};
+
+var transformed = o.copyToFrom(specs, original);
+// { 
+//   name: 'Eirik',
+//   birth: { year: 1986 },
+//   list: [ { count: 1 } ],
+//   newField: 'Eirik',
+//   newField2: { nestedField: 'Eirik', nestedField2: { birthYear: 1986 } },
+//   birthYear: 1986,
+//   firstListElement: 1
 // }
 ```
 

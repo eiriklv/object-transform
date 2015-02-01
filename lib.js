@@ -10,7 +10,7 @@
 
   var objectTransform = {};
 
-  function _only_once(fn) {
+  function _onlyOnce(fn) {
     var called = false;
     return function() {
       if (called) throw new Error('callback was already called');
@@ -18,6 +18,50 @@
       fn.apply(null, arguments);
     }
   }
+
+  function _addNestedProp(key, result, specs, input) {
+    if (typeof specs[key] === 'string') {
+      result[key] = _byString(input, specs[key])
+    } else if (typeof specs[key] === 'object') {
+      if (!specs[key]) return;
+      _addField(result, key);
+      _addProps(result[key], specs[key], input);
+    }
+  }
+
+  function _addProps(output, specs, input) {
+    if (!specs) return;
+    Object.keys(specs).forEach(function(key) {
+      _addNestedProp(key, output, specs, input);
+    });
+  }
+
+  function _addField(o, field) {
+    o[field] = {};
+  }
+
+  function _byString(o, s) {
+    s = s.replace(/\[(\w+)\]/g, '.$1');
+    s = s.replace(/^\./, '');
+
+    var a = s.split('.');
+
+    return (function iter() {
+      var n = a.shift();
+      var predicate = false;
+
+      try {
+        predicate = (n in o);
+      } catch (e) {}
+
+      if (!predicate) return;
+      o = o[n];
+
+      if (a.length)
+        return iter();
+      return o;
+    }());
+  };
 
   function _each(arr, iterator) {
     for (var i = 0; i < arr.length; i += 1) {
@@ -32,7 +76,7 @@
     }
     var completed = 0;
     _each(arr, function(x) {
-      iterator(x, _only_once(done));
+      iterator(x, _onlyOnce(done));
     });
 
     function done(err) {
@@ -72,6 +116,14 @@
       }
       result[key] = value;
     }, object);
+  };
+
+  objectTransform.copyToFrom = function(specs, object) {
+    var result = objectTransform.copy({}, object);
+    
+    _addProps(result, specs, object);
+    
+    return result;
   };
 
   objectTransform.transformToSync = function(transforms, object) {
