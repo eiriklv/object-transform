@@ -22,8 +22,9 @@
   function _addNestedProp(key, result, specs, input) {
     if (typeof specs[key] === 'string') {
       result[key] = _byString(input, specs[key])
-    } else if (typeof specs[key] === 'object') {
-      if (!specs[key]) return;
+    } else if (typeof specs[key] === 'object' &&
+      specs[key]
+    ) {
       _addField(result, key);
       _addProps(result[key], specs[key], input);
     }
