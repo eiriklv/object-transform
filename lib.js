@@ -21,13 +21,17 @@
 
   function _addNestedProp(key, result, specs, input) {
     if (typeof specs[key] === 'string') {
-      result[key] = _byString(input, specs[key])
+      result[key] = _getPropByString(specs[key], input)
     } else if (typeof specs[key] === 'object' &&
       specs[key]
     ) {
       _addField(result, key);
       _addProps(result[key], specs[key], input);
     }
+  }
+
+  function _clone(object) {
+    return JSON.parse(JSON.stringify(object));
   }
 
   function _addProps(output, specs, input) {
@@ -41,7 +45,40 @@
     o[field] = {};
   }
 
-  function _byString(o, s) {
+  function _addNestedTransforms(key, output, specs, input, trail) {
+    trail = trail + '.' + key;
+    if (trail.split('')[0] === '.')
+      trail = trail.slice(1);
+
+    if (typeof specs[key] === 'function') {
+      output.push({
+        location: trail,
+        value: _getPropByString(trail, input),
+        transform: specs[key]
+      })
+    } else if (typeof specs[key] === 'object' &&
+      specs[key]
+    ) {
+      _addTransforms(output, specs[key], input, trail);
+    }
+  }
+
+  function _addTransforms(output, specs, input, trail) {
+    if (!specs) return;
+    trail = trail || '';
+
+    Object.keys(specs).forEach(function(key) {
+      _addNestedTransforms(key, output, specs, input, trail);
+    });
+  }
+
+  function _getTransformsList(specs, object) {
+    var output = [];
+    _addTransforms(output, specs, object);
+    return output;
+  };
+
+  function _getPropByString(s, o) {
     s = s.replace(/\[(\w+)\]/g, '.$1');
     s = s.replace(/^\./, '');
 
@@ -62,7 +99,26 @@
         return iter();
       return o;
     }());
-  };
+  }
+
+  function _setPropByString(s, u, o) {
+    s = s.replace(/\[(\w+)\]/g, '.$1');
+    s = s.replace(/^\./, '');
+
+    var a = s.split('.');
+
+    return (function iter(object) {
+      var n = a.shift();
+
+      if (!object[n]) {
+        object[n] = {};
+      }
+
+      if (a.length) return iter(object[n]);
+      object[n] = u;
+      return o;
+    }(o));
+  }
 
   function _each(arr, iterator) {
     for (var i = 0; i < arr.length; i += 1) {
@@ -120,21 +176,20 @@
   };
 
   objectTransform.copyToFrom = function(specs, object) {
-    var result = objectTransform.copy({}, object);
-    
+    var result = _clone(object);
     _addProps(result, specs, object);
-    
     return result;
   };
 
   objectTransform.transformToSync = function(transforms, object) {
-    return objectTransform.transformSync(function(result, value, key) {
-      if (transforms.hasOwnProperty(key)) {
-        result[key] = transforms[key](value);
-      } else {
-        result[key] = value;
-      }
-    }, object);
+    var transformList = _getTransformsList(transforms, object);
+    var output = _clone(object);
+
+    transformList.forEach(function(item) {
+      _setPropByString(item.location, item.transform(item.value), output);
+    });
+
+    return output;
   };
 
   objectTransform.transform = function(fn, object, callback) {
@@ -149,17 +204,18 @@
   };
 
   objectTransform.transformTo = function(transforms, object, callback) {
-    objectTransform.transform(function(result, value, key, callback) {
-      if (transforms.hasOwnProperty(key)) {
-        transforms[key](value, function(err, transformed) {
-          if (!err) result[key] = transformed;
-          return callback(err);
-        });
-      } else {
-        result[key] = value;
+    var transformList = _getTransformsList(transforms, object);
+    var output = _clone(object);
+
+    _asyncEach(transformList, function(item, callback) {
+      item.transform(item.value, function(err, result) {
+        if (err) return callback(err);
+        _setPropByString(item.location, result, output);
         callback();
-      }
-    }, object, callback);
+      });
+    }, function(err) {
+      callback(err, output);
+    });
   };
 
   return objectTransform;

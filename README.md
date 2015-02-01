@@ -58,19 +58,28 @@ var reverse = function(str) {
 var words = {
   a: 'hello',
   b: 'world',
-  foo: 'bar'
+  foo: 'bar',
+  bar: {
+    baz: 'qux'
+  }
 };
 
 var transforms = {
   a: reverse,
-  b: reverse
+  b: reverse,
+  bar: {
+    baz: reverse
+  }
 };
 
 var transformed = obtr.transformToSync(transforms, words);
 // {
 //   a: 'olleh',
 //   b: 'dlrow',
-//   foo: 'bar'
+//   foo: 'bar',
+//   bar: {
+//     baz: 'xuq'
+//   }
 // }
 ```
 
@@ -221,12 +230,18 @@ var reverse = function(input, callback) {
 var words = {
   a: 'hello',
   b: 'world',
-  foo: 'bar'
+  foo: 'bar',
+  bar: {
+    baz: 'qux'
+  }
 };
 
 var transforms = {
   a: reverse,
-  b: reverse
+  b: reverse,
+  bar: {
+    baz: reverse
+  }
 };
 
 obtr.transformTo(transforms, words, function(err, transformed) {
@@ -234,7 +249,10 @@ obtr.transformTo(transforms, words, function(err, transformed) {
   // {
   //   a: 'olleh',
   //   b: 'dlrow',
-  //   foo: 'bar'
+  //   foo: 'bar',
+  //   bar: {
+  //     baz: 'xuq'
+  //   }
   // }
 });
 ```
