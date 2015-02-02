@@ -160,21 +160,6 @@
     return result;
   };
 
-  objectTransform.copy = function(copies, object) {
-    return objectTransform.transformSync(function(result, value, key) {
-      if (copies.hasOwnProperty(key)) {
-        if (Array.isArray(copies[key])) {
-          copies[key].forEach(function(newKey) {
-            result[newKey] = value;
-          });
-        } else {
-          result[copies[key]] = value;
-        }
-      }
-      result[key] = value;
-    }, object);
-  };
-
   objectTransform.copyToFrom = function(specs, object) {
     var result = _clone(object);
     _addProps(result, specs, object);

@@ -85,42 +85,6 @@ var transformed = obtr.transformToSync(transforms, words);
 
 ---------------------------------------
 
-### .copy(specs, object)
-
-(Deprecated in favor of `.copyToFrom`)
-Copy object properties to new properties on the same object.
-
-__Arguments__
-
-* `specs` - A string or an array of strings describing
-  what to copy and where to put it.
-* `object` - The original object that is to be transformed.
-
-__Example__
-
-```js
-var words = {
-  a: 'hello',
-  b: 'world'
-};
-
-var specs = {
-  a: ['c', 'd'],
-  b: 'crap'
-};
-
-var copied = obtr.copy(specs, words);
-// {
-//   a: 'hello',
-//   b: 'world',
-//   c: 'hello',
-//   d: 'hello',
-//   crap: 'world'
-// }
-```
-
----------------------------------------
-
 ### .copyToFrom(specs, object)
 
 Copy object properties to new properties on the same object,
