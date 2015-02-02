@@ -249,3 +249,224 @@ exports['.transformToSync'] = {
     test.done();
   }
 }
+
+
+exports['.transformTo'] = {
+  'should apply correct transform (single)': function(test) {
+    test.expect(4);
+
+    var transform = {
+      first: reverseAsync
+    }
+
+    obtr.transformTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, reverse(testObject.first), 'transform should be applied');
+      test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+      test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  },
+
+  'should apply correct transform (single nested)': function(test) {
+    test.expect(4);
+
+    var transform = {
+      third: {
+        fourth: reverseAsync
+      }
+    };
+
+    obtr.transformTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+      test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+      test.strictEqual(transformed.third.fourth, reverse(testObject.third.fourth), 'transform should be applied');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  },
+
+  'should apply correct transform (multiple)': function(test) {
+    test.expect(4);
+
+    var transform = {
+      first: reverseAsync,
+      second: reverseAsync
+    }
+
+    obtr.transformTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, reverse(testObject.first), 'transform should be applied');
+      test.strictEqual(transformed.second, reverse(testObject.second), 'original should not be altered');
+      test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  },
+
+  'should apply correct transforms (multiple nested)': function(test) {
+    test.expect(4);
+
+    var transform = {
+      first: reverseAsync,
+      second: reverseAsync,
+      third: {
+        fourth: reverseAsync
+      }
+    }
+
+    obtr.transformTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, reverse(testObject.first), 'transform should be applied');
+      test.strictEqual(transformed.second, reverse(testObject.second), 'transform should be applied');
+      test.strictEqual(transformed.third.fourth, reverse(testObject.third.fourth), 'transform should be applied');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  },
+
+  'should apply correct transforms (multiple nested all)': function(test) {
+    test.expect(4);
+
+    var transform = {
+      first: reverseAsync,
+      second: reverseAsync,
+      third: {
+        fourth: reverseAsync,
+        fifth: reverseAsync
+      }
+    }
+
+    obtr.transformTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, reverse(testObject.first), 'transform should be applied');
+      test.strictEqual(transformed.second, reverse(testObject.second), 'transform should be applied');
+      test.strictEqual(transformed.third.fourth, reverse(testObject.third.fourth), 'transform should be applied');
+      test.strictEqual(transformed.third.fifth, reverse(testObject.third.fifth), 'transform should be applied');
+      test.done();
+    });
+  },
+
+  'should ignore transform if not a function': function(test) {
+    test.expect(4);
+
+    var transform = {
+      first: 'goodbye'
+    }
+
+    obtr.transformTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+      test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+      test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  },
+
+  'should ignore transform if not a function (nested)': function(test) {
+    test.expect(4);
+
+    var transform = {
+      third: {
+        fourth: 'goodbye'
+      }
+    };
+
+    obtr.transformTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+      test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+      test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  },
+
+  'should ignore transform if not a function (null) (nested)': function(test) {
+    test.expect(4);
+
+    var transform = {
+      third: {
+        fourth: null
+      }
+    };
+
+    obtr.transformTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+      test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+      test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  },
+
+  'should ignore transform if not a function (undefined) (nested)': function(test) {
+    test.expect(4);
+
+    var transform = {
+      third: {
+        fourth: undefined
+      }
+    };
+
+    obtr.transformTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+      test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+      test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  },
+
+  'should ignore transform if empty': function(test) {
+    test.expect(4);
+
+    var transform = {};
+
+    obtr.transformTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+      test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+      test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  },
+
+  'should ignore transform if not an object (array)': function(test) {
+    test.expect(4);
+
+    var transform = [];
+
+    obtr.transformTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+      test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+      test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  },
+
+  'should ignore transform if not an object (string)': function(test) {
+    test.expect(4);
+
+    var transform = 'blabla';
+
+    obtr.transformTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+      test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+      test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  },
+
+  'should ignore transform if not an object (number)': function(test) {
+    test.expect(4);
+
+    var transform = 500;
+
+    obtr.transformTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+      test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+      test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  }
+}
