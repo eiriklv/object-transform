@@ -627,4 +627,80 @@ exports['.transformTo'] = {
       test.done();
     });
   }
-}
+};
+
+exports['.transform'] = {
+  'should be unaltered if used correctly': function(test) {
+    test.expect(4);
+
+    obtr.transform(function(result, value, key, callback) {
+      result[key] = value;
+      callback();
+    }, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+      test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+      test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  },
+
+  'should apply correct transform': function(test) {
+    test.expect(4);
+
+    var testObject = {
+      first: 'hello',
+      second: 'world',
+      third: 'foo',
+      fourth: 'bar'
+    };
+
+    obtr.transform(function(result, value, key, callback) {
+      result[key] = reverse(value);
+      callback();
+    }, testObject, function(err, transformed) {
+      test.strictEqual(transformed.first, reverse(testObject.first), 'transform should be applied');
+      test.strictEqual(transformed.second, reverse(testObject.second), 'transform should be applied');
+      test.strictEqual(transformed.third, reverse(testObject.third), 'transform should be applied');
+      test.strictEqual(transformed.fourth, reverse(testObject.fourth), 'transform should be applied');
+      test.done();
+    });
+  }
+};
+
+exports['.transformSync'] = {
+  'should be unaltered if used correctly': function(test) {
+    test.expect(4);
+
+    var transformed = obtr.transformSync(function(result, value, key) {
+      result[key] = value;
+    }, testObject);
+
+    test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+    test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+    test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+    test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+    test.done();
+  },
+
+  'should apply correct transform': function(test) {
+    test.expect(4);
+
+    var testObject = {
+      first: 'hello',
+      second: 'world',
+      third: 'foo',
+      fourth: 'bar'
+    };
+
+    var transformed = obtr.transformSync(function(result, value, key) {
+      result[key] = reverse(value);
+    }, testObject);
+
+    test.strictEqual(transformed.first, reverse(testObject.first), 'transform should be applied');
+    test.strictEqual(transformed.second, reverse(testObject.second), 'transform should be applied');
+    test.strictEqual(transformed.third, reverse(testObject.third), 'transform should be applied');
+    test.strictEqual(transformed.fourth, reverse(testObject.fourth), 'transform should be applied');
+    test.done();
+  }
+};

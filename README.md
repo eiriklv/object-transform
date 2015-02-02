@@ -1,6 +1,8 @@
 Object Transform
 ================
 
+[![Build Status](https://travis-ci.org/eiriklv/object-transform.svg?branch=master)](https://travis-ci.org/eiriklv/object-transform)
+
 #### Introduction:
 A small library to do object transforms.
 Mostly for use with functional programming pipelines and streams.
