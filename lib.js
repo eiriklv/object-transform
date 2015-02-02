@@ -67,6 +67,12 @@
     if (!specs) return;
     trail = trail || '';
 
+    try {
+      Object.keys(specs);
+    } catch (e) {
+      return;
+    }
+
     Object.keys(specs).forEach(function(key) {
       _addNestedTransforms(key, output, specs, input, trail);
     });
