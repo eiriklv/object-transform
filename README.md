@@ -26,6 +26,8 @@ __Arguments__
 __Example__
 
 ```js
+var obtr = require('fs-object-transform');
+
 var words = {
   a: 'hello',
   b: 'world'
@@ -56,6 +58,8 @@ __Arguments__
 __Example__
 
 ```js
+var obtr = require('fs-object-transform');
+
 var reverse = function(str) {
   return str.split('').reverse().join('');
 };
@@ -104,6 +108,8 @@ __Arguments__
 __Example__
 
 ```js
+var obtr = require('fs-object-transform');
+
 var original = {
   name: 'Eirik',
   birth: {
@@ -126,7 +132,7 @@ var specs = {
   firstListElement: 'list[0].count'
 };
 
-var transformed = o.copyToFrom(specs, original);
+var transformed = obtr.copyToFrom(specs, original);
 // { 
 //   name: 'Eirik',
 //   birth: { year: 1986 },
@@ -157,6 +163,8 @@ __Arguments__
 __Example__
 
 ```js
+var obtr = require('fs-object-transform');
+
 var words = {
   a: 'hello',
   b: 'world'
@@ -192,6 +200,8 @@ __Arguments__
 __Example__
 
 ```js
+var obtr = require('fs-object-transform');
+
 var reverse = function(input, callback) {
   callback(null, input.split('').reverse().join(''));
 }
