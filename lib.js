@@ -36,6 +36,13 @@
 
   function _addProps(output, specs, input) {
     if (!specs) return;
+
+    try {
+      Object.keys(specs);
+    } catch (e) {
+      return;
+    }
+    
     Object.keys(specs).forEach(function(key) {
       _addNestedProp(key, output, specs, input);
     });

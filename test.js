@@ -248,8 +248,166 @@ exports['.transformToSync'] = {
 
     test.done();
   }
-}
+};
 
+exports['.copyToFrom'] = {
+  'should copy a field (single)': function(test) {
+    test.expect(5);
+
+    var transform = {
+      newField: 'first'
+    };
+
+    var transformed = obtr.copyToFrom(transform, testObject);
+
+    test.strictEqual(transformed.newField, testObject.first, 'new field should be correct');
+    test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+    test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+    test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+    test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+
+    test.done();
+  },
+
+  'should copy fields (multiple)': function(test) {
+    test.expect(5);
+
+    var transform = {
+      newField: 'first',
+      newField2: 'first'
+    };
+
+    var transformed = obtr.copyToFrom(transform, testObject);
+
+    test.strictEqual(transformed.newField, testObject.first, 'new field should be correct');
+    test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+    test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+    test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+    test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+
+    test.done();
+  },
+
+  'should copy fields (multiple 2)': function(test) {
+    test.expect(6);
+
+    var transform = {
+      newField: 'first',
+      newField2: 'second'
+    };
+
+    var transformed = obtr.copyToFrom(transform, testObject);
+
+    test.strictEqual(transformed.newField, testObject.first, 'new field should be correct');
+    test.strictEqual(transformed.newField2, testObject.second, 'new field should be correct');
+    test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+    test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+    test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+    test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+
+    test.done();
+  },
+
+  'should copy to nested field from non-nested (single)': function(test) {
+    test.expect(5);
+
+    var transform = {
+      newField: {
+        newField2: 'first'
+      }
+    };
+
+    var transformed = obtr.copyToFrom(transform, testObject);
+
+    test.strictEqual(transformed.newField.newField2, testObject.first, 'new field should be correct');
+    test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+    test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+    test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+    test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+
+    test.done();
+  },
+
+  'should copy to nested field from nested (single)': function(test) {
+    test.expect(5);
+
+    var transform = {
+      newField: {
+        newField2: 'third.fourth'
+      }
+    };
+
+    var transformed = obtr.copyToFrom(transform, testObject);
+
+    test.strictEqual(transformed.newField.newField2, testObject.third.fourth, 'new field should be correct');
+    test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+    test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+    test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+    test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+
+    test.done();
+  },
+
+  'should return unaltered if no copies applied': function(test) {
+    test.expect(4);
+
+    var transform = {};
+
+    var transformed = obtr.copyToFrom(transform, testObject);
+
+    test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+    test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+    test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+    test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+
+    test.done();
+  },
+
+  'should return unaltered if invalid copy-specs (array)': function(test) {
+    test.expect(4);
+
+    var transform = [];
+
+    var transformed = obtr.copyToFrom(transform, testObject);
+
+    test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+    test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+    test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+    test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+
+    test.done();
+  },
+
+  'should return unaltered if invalid copy-specs (number)': function(test) {
+    test.expect(4);
+
+    var transform = 500;
+
+    var transformed = obtr.copyToFrom(transform, testObject);
+
+    test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+    test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+    test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+    test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+
+    test.done();
+  },
+
+  'should return unaltered if invalid copy-specs (string)': function(test) {
+    test.expect(4);
+
+    var transform = 'goodbye';
+
+    var transformed = obtr.copyToFrom(transform, testObject);
+
+    test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+    test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+    test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+    test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+
+    test.done();
+  }
+}
 
 exports['.transformTo'] = {
   'should apply correct transform (single)': function(test) {
