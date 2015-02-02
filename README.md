@@ -2,6 +2,9 @@ Object Transform
 ================
 
 [![Build Status](https://travis-ci.org/eiriklv/object-transform.svg?branch=master)](https://travis-ci.org/eiriklv/object-transform)
+[![npm version](https://badge.fury.io/js/fp-object-transform.svg)](http://badge.fury.io/js/fp-object-transform)
+[![Dependency Status](https://david-dm.org/eiriklv/object-transform.svg)](https://david-dm.org/eiriklv/object-transform)
+[![devDependency Status](https://david-dm.org/eiriklv/object-transform/dev-status.svg)](https://david-dm.org/eiriklv/object-transform#info=devDependencies)
 
 #### Introduction:
 A small library to do object transforms.
