@@ -26,7 +26,7 @@ __Arguments__
 __Example__
 
 ```js
-var obtr = require('fs-object-transform');
+var obtr = require('fp-object-transform');
 
 var words = {
   a: 'hello',
@@ -58,7 +58,7 @@ __Arguments__
 __Example__
 
 ```js
-var obtr = require('fs-object-transform');
+var obtr = require('fp-object-transform');
 
 var reverse = function(str) {
   return str.split('').reverse().join('');
@@ -108,7 +108,7 @@ __Arguments__
 __Example__
 
 ```js
-var obtr = require('fs-object-transform');
+var obtr = require('fp-object-transform');
 
 var original = {
   name: 'Eirik',
@@ -163,7 +163,7 @@ __Arguments__
 __Example__
 
 ```js
-var obtr = require('fs-object-transform');
+var obtr = require('fp-object-transform');
 
 var words = {
   a: 'hello',
@@ -200,7 +200,7 @@ __Arguments__
 __Example__
 
 ```js
-var obtr = require('fs-object-transform');
+var obtr = require('fp-object-transform');
 
 var reverse = function(input, callback) {
   callback(null, input.split('').reverse().join(''));
