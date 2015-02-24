@@ -237,3 +237,108 @@ obtr.transformTo(transforms, words, function(err, transformed) {
 ```
 
 ---------------------------------------
+
+### .deriveToSync(derivatives, object)
+
+Transform the properties of an object based on an object
+describing transforms on specific properties. The value
+of the property is used as input for the transform
+
+This is really just a shorthand for doing `.copyToFrom`
+and `.transformToSync` in sequence.
+
+__Arguments__
+
+* `derivatives` - An object specifying the derivatives to be applied.
+* `object` - The original object that is to be transformed.
+
+__Example__
+
+```js
+var obtr = require('fp-object-transform');
+
+var reverse = function(str) {
+  return str.split('').reverse().join('');
+};
+
+var words = {
+  a: 'hello',
+  b: 'world',
+  foo: 'bar',
+  bar: {
+    baz: 'qux'
+  }
+};
+
+var derivatives = {
+  b: ['b', reverse];
+  newField: ['bar.baz', reverse],
+};
+
+var transformed = obtr.deriveToSync(derivatives, words);
+// {
+//   a: 'hello',
+//   b: 'dlrow',
+//   foo: 'bar',
+//   bar: {
+//     baz: 'qux'
+//   },
+//   newField: 'xuq'
+// }
+```
+
+---------------------------------------
+
+### .deriveTo(derivatives, object)
+
+(Asynchronous version)
+Transform the properties of an object based on an object
+describing transforms on specific properties. The value
+of the property is used as input for the transform
+
+This is really just a shorthand for doing `.copyToFrom`
+and `.transformTo` in sequence.
+
+__Arguments__
+
+* `derivatives` - An object specifying the derivatives to be applied.
+* `object` - The original object that is to be transformed.
+
+__Example__
+
+```js
+var obtr = require('fp-object-transform');
+
+var reverse = function(input, callback) {
+  callback(null, input.split('').reverse().join(''));
+}
+
+var words = {
+  a: 'hello',
+  b: 'world',
+  foo: 'bar',
+  bar: {
+    baz: 'qux'
+  }
+};
+
+var transforms = {
+  b: ['b', reverse];
+  newField: ['bar.baz', reverse],
+};
+
+obtr.deriveTo(transforms, words, function(err, transformed) {
+  console.log(transformed);
+  // {
+  //   a: 'hello',
+  //   b: 'dlrow',
+  //   foo: 'bar',
+  //   bar: {
+  //     baz: 'qux'
+  //   },
+  //   newField: 'xuq'
+  // }
+});
+```
+
+---------------------------------------

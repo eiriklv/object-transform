@@ -10,6 +10,10 @@
 
   var objectTransform = {};
 
+  function _clone(object) {
+    return JSON.parse(JSON.stringify(object));
+  }
+
   function _onlyOnce(fn) {
     var called = false;
     return function() {
@@ -28,10 +32,6 @@
       _addField(result, key);
       _addProps(result[key], specs[key], input);
     }
-  }
-
-  function _clone(object) {
-    return JSON.parse(JSON.stringify(object));
   }
 
   function _addProps(output, specs, input) {
@@ -83,6 +83,64 @@
     Object.keys(specs).forEach(function(key) {
       _addNestedTransforms(key, output, specs, input, trail);
     });
+  }
+
+    function _addNestedDerivativeCopy(key, result, specs, input) {
+    if (Array.isArray(specs[key]) && typeof specs[key][0] === 'string') {
+      result[key] = specs[key][0];
+    } else if (typeof specs[key] === 'object' && specs[key]) {
+      _addField(result, key);
+      _addDerivativeCopy(result[key], specs[key], input);
+    }
+  }
+
+  function _addDerivativeCopy(output, specs, input) {
+    if (!specs) return;
+
+    try {
+      Object.keys(specs);
+    } catch (e) {
+      return;
+    }
+    
+    Object.keys(specs).forEach(function(key) {
+      _addNestedDerivativeCopy(key, output, specs, input);
+    });
+  }
+
+  function _addNestedDerivativeTransform(key, result, specs, input) {
+    if (Array.isArray(specs[key]) && typeof specs[key][1] === 'function') {
+      result[key] = specs[key][1];
+    } else if (typeof specs[key] === 'object' && specs[key]) {
+      _addField(result, key);
+      _addDerivativeTransform(result[key], specs[key], input);
+    }
+  }
+
+  function _addDerivativeTransform(output, specs, input) {
+    if (!specs) return;
+
+    try {
+      Object.keys(specs);
+    } catch (e) {
+      return;
+    }
+    
+    Object.keys(specs).forEach(function(key) {
+      _addNestedDerivativeTransform(key, output, specs, input);
+    });
+  }
+
+  function _getTransformSpec(derivatives, object) {
+    var transformSpec = _clone(derivatives);
+    _addDerivativeTransform(transformSpec, derivatives, object);
+    return transformSpec;
+  }
+
+  function _getCopySpec(derivatives, object) {
+    var copySpec = _clone(derivatives);
+    _addDerivativeCopy(copySpec, derivatives, object);
+    return copySpec;
   }
 
   function _getTransformsList(specs, object) {
@@ -214,6 +272,27 @@
     }, function(err) {
       callback(err, output);
     });
+  };
+
+  objectTransform.deriveToSync = function(derivatives, object) {
+    return objectTransform.transformToSync(
+      _getTransformSpec(derivatives),
+      objectTransform.copyToFrom(
+        _getCopySpec(derivatives),
+        _clone(object)
+      )
+    );
+  };
+
+  objectTransform.deriveTo = function(derivatives, object, callback) {
+    return objectTransform.transformTo(
+      _getTransformSpec(derivatives),
+      objectTransform.copyToFrom(
+        _getCopySpec(derivatives),
+        _clone(object)
+      ),
+      callback
+    );
   };
 
   return objectTransform;
