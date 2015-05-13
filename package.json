@@ -1,11 +1,10 @@
 {
   "name": "fp-object-transform",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "main": "./lib.js",
   "description": "A small lib to transform object properties using sync or async functions",
   "dependencies": {
     "async-each": "^0.1.6",
-    "lodash.clonedeep": "^3.0.0",
     "lodash.get": "^3.7.0",
     "lodash.set": "^3.7.1"
   },

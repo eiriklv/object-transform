@@ -1,4 +1,3 @@
-var clone = require('lodash.clonedeep');
 var get = require('lodash.get');
 var set = require('lodash.set');
 var asyncEach = require('async-each');
@@ -16,6 +15,18 @@ module.exports = (function() {
       _addField(result, key);
       _addProps(result[key], specs[key], input);
     }
+  }
+
+  function _clone(obj) {
+    var clonedObj;
+
+    try {
+      clonedObj = JSON.parse(JSON.stringify(obj));
+    } catch (e) {
+      clonedObj = {};
+    }
+
+    return clonedObj;
   }
 
   function _addProps(output, specs, input) {
@@ -117,13 +128,13 @@ module.exports = (function() {
   }
 
   function _getTransformSpec(derivatives, object) {
-    var transformSpec = clone(derivatives);
+    var transformSpec = _clone(derivatives);
     _addDerivativeTransform(transformSpec, derivatives, object);
     return transformSpec;
   }
 
   function _getCopySpec(derivatives, object) {
-    var copySpec = clone(derivatives);
+    var copySpec = _clone(derivatives);
     _addDerivativeCopy(copySpec, derivatives, object);
     return copySpec;
   }
@@ -146,14 +157,14 @@ module.exports = (function() {
   };
 
   objectTransform.copyToFrom = function(specs, object) {
-    var result = clone(object);
+    var result = _clone(object);
     _addProps(result, specs, object);
     return result;
   };
 
   objectTransform.transformToSync = function(transforms, object) {
     var transformList = _getTransformsList(transforms, object);
-    var output = clone(object);
+    var output = _clone(object);
 
     transformList.forEach(function(item) {
       set(output, item.location, item.transform(item.value));
@@ -175,7 +186,7 @@ module.exports = (function() {
 
   objectTransform.transformTo = function(transforms, object, callback) {
     var transformList = _getTransformsList(transforms, object);
-    var output = clone(object);
+    var output = _clone(object);
 
     asyncEach(transformList, function(item, callback) {
       item.transform(item.value, function(err, result) {
@@ -193,7 +204,7 @@ module.exports = (function() {
       _getTransformSpec(derivatives),
       objectTransform.copyToFrom(
         _getCopySpec(derivatives),
-        clone(object)
+        _clone(object)
       )
     );
   };
@@ -203,7 +214,7 @@ module.exports = (function() {
       _getTransformSpec(derivatives),
       objectTransform.copyToFrom(
         _getCopySpec(derivatives),
-        clone(object)
+        _clone(object)
       ),
       callback
     );
