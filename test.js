@@ -980,6 +980,29 @@ exports['.deriveTo'] = {
     });
   },
 
+  'should copy to nested field from nested (multi) and transform': function(test) {
+    test.expect(7);
+
+    var transform = {
+      newField: {
+        newField2: ['third.fourth', reverseAsync],
+        newField3: ['third.fourth', reverseAsync],
+        newField4: ['third.fourth', reverseAsync]
+      }
+    };
+
+    obtr.deriveTo(transform, testObject, function(err, transformed) {
+      test.strictEqual(transformed.newField.newField2, reverse(testObject.third.fourth), 'new field should be correct');
+      test.strictEqual(transformed.newField.newField3, reverse(testObject.third.fourth), 'new field should be correct');
+      test.strictEqual(transformed.newField.newField4, reverse(testObject.third.fourth), 'new field should be correct');
+      test.strictEqual(transformed.first, testObject.first, 'original should not be altered');
+      test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
+      test.strictEqual(transformed.third.fourth, testObject.third.fourth, 'original should not be altered');
+      test.strictEqual(transformed.third.fifth, testObject.third.fifth, 'original should not be altered');
+      test.done();
+    });
+  },
+
   'should return unaltered if no derivatives applied': function(test) {
     test.expect(4);
 
