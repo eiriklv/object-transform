@@ -1,6 +1,6 @@
 {
   "name": "fp-object-transform",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": "./lib.js",
   "description": "A small lib to transform object properties using sync or async functions",
   "dependencies": {
