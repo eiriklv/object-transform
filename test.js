@@ -25,11 +25,7 @@ exports['.transformToSync'] = {
       first: reverse
     }
 
-    console.log('---------------');
-
     var transformed = obtr.transformToSync(transform, testObject);
-
-    console.log('transformed:', transformed);
 
     test.strictEqual(transformed.first, reverse(testObject.first), 'transform should be applied');
     test.strictEqual(transformed.second, testObject.second, 'original should not be altered');
