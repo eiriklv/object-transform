@@ -7,7 +7,7 @@ module.exports = (function() {
 
   function _addNestedProp(key, result, specs, input) {
     if (typeof specs[key] === 'string') {
-      result[key] = get(input, specs[key])
+      result[key] = _clone(get(input, specs[key]));
     } else if (
       typeof specs[key] === 'object' &&
       specs[key]
@@ -37,7 +37,7 @@ module.exports = (function() {
     } catch (e) {
       return;
     }
-    
+
     Object.keys(specs).forEach(function(key) {
       _addNestedProp(key, output, specs, input);
     });
@@ -67,7 +67,7 @@ module.exports = (function() {
 
   function _addTransforms(output, specs, input, trail) {
     if (!specs) return;
-    
+
     trail = trail || '';
 
     try {
@@ -98,7 +98,7 @@ module.exports = (function() {
     } catch (e) {
       return;
     }
-    
+
     Object.keys(specs).forEach(function(key) {
       _addNestedDerivativeCopy(key, output, specs, input);
     });
@@ -121,7 +121,7 @@ module.exports = (function() {
     } catch (e) {
       return;
     }
-    
+
     Object.keys(specs).forEach(function(key) {
       _addNestedDerivativeTransform(key, output, specs, input);
     });
